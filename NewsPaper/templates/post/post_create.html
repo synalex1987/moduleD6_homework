@@ -1,0 +1,33 @@
+{% extends 'default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+  Создание новости
+{% endblock %}
+
+{% block content %}
+  {% if post.author.username.id == None or post.author.username.id == user.id %}
+    <h3>Ввод информации</h3>
+    <form method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="author" value={{ user.id }} />
+      <label>Заголовок</label>
+      {{ form.title }}
+      <label>Текст</label>
+      {{ form.text }}
+      <label>Тип</label>
+      {{ form.post_type }}
+      <label>Категория</label>
+      {{ form.category }}
+      {% if post.author.username.id == None %}
+        <input type="submit" value="Добавить новость" />
+      {% else %}
+        <input type="submit" value="Обновить новость" />
+      {% endif %}
+      <a href="{% url 'post_list' %}">Вернуться к списку новостей</a>
+    </form>
+  {% else %}
+    <h4>Простите, но вы не автор этой новости. Нет прав на редактирование. Вернуться на <a href="{% url 'post_list' %}">главную</a>...</h4>
+  {% endif %}
+{% endblock %}

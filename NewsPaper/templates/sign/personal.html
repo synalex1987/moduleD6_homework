@@ -1,0 +1,31 @@
+{% extends 'default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+  Персональная страница
+{% endblock %}
+
+{% block content %}
+  Привет, <b>{{ username }}!</b><br />
+  {% if is_not_authors %}
+    Если вы хотите добавлять новости на сайт, то нажмите на кнопку ниже:<br />
+    <button><a href="{% url 'upgrade' %}">Стать автором!</a></button>
+  {% else %}
+    Вы можете добавлять и редактировать новости!
+  {% endif %}
+
+  <h5>Ваши подписки:</h5><br />
+  <form class="form-control" method="POST" action="{% url 'subscriptions_update' %}">
+    {% csrf_token %}
+    {% for s in subscriptions %}
+      {% if s in your_subscriptions %}
+        <input type="checkbox" name="{{ s }}" value="{{ s }}" checked/>
+      {% else %}
+        <input type="checkbox" name="{{ s }}" value="{{ s }}"/>
+      {% endif %}
+      <label for="{{ s }}">{{ s }}</label>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Обновить подписки</button>
+  </form>
+{% endblock %}

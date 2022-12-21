@@ -1,0 +1,69 @@
+{% extends 'default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+  Все посты и новости
+{% endblock %}
+
+{% block content %}
+  <h1>Все посты и новости</h1>
+  <h3>На сегодня ({{ time_now|date:'M d Y' }}) количество постов: {{ total }}</h3>
+  <form method="GET" class="form-control">
+    {{ filter.form }}
+    <input type="submit" value="Найти" class="btn btn-primary">
+  </form>
+  {% if post_list_with_query %}
+    <table class="table">
+      <thead>
+        <th>Результат</th>
+        <th>Автор</th>
+        <th>Заголовок</th>
+        <th>Время публикации</th>
+        <th>Тип поста</th>
+        <th>Категория</th>
+        <th>Превью</th>
+        <th>Рейтинг</th>
+      </thead>
+      {% for p in filter.qs %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ p.author }}</td>
+          <td>{{ p.title|censor }}</td>
+          <td>{{ p.time|date:'d M Y' }}</td>
+          <td>{{ p.post_type }}</td>
+          <td>{{ p.category.all|join:', ' }}</td>
+          <td>{{ p.preview|truncatechars:20|censor }}</td>
+          <td>{{ p.rating }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    {% if is_paginated %}
+      {% if page_obj.has_previous %}
+        <a href="?page=1">Первая</a>
+        <a href="?page={{ page_obj.previous_page_number }}"></a>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <a>{{ num }}</a>
+          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <a href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">>>></a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
+      {% endif %}
+    {% endif %}
+  {% else %}
+    <h1>Постов нет</h1>
+  {% endif %}
+
+  <form method="POST" class="form-control">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Добавить новость">
+  </form> 
+{% endblock %}

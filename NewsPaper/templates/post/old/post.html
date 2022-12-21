@@ -1,0 +1,14 @@
+{% extends 'default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+  {{ post.title }}
+{% endblock %}
+
+{% block content %}
+  <div class="card-body text-center"><h3 class="fs-4 fw-bold">{{ post.title }}</h3></div>
+  <div card-body text-center p-4 p-lg-5 pt-0 pt-lg-0>Дата публикации: <b>{{ post.time|date:'d M Y' }}</b></div>
+  <p class="card-body text-center">{{ post.text|censor }}</p>
+  <a href="{% url 'post_list' %}">Вернуться к списку новостей</a>
+{% endblock %}

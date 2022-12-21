@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <h2>Здравствуйте, {{ user }}! Новые статьи в твоём любимом разделе <i>{{ category }}</i> за неделю!</h2>
+    {% if post_list %}
+        {% for p in post_list %}
+            <h4>Заголовок: {{ p.title }}</h4>
+            <p>Содержание: {{ p.preview}}</p>
+            <a href="{{ base_url }}{{ p.get_absolute_url }}">Читать полностью</a>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>
